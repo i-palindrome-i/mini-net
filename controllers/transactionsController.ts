@@ -9,10 +9,12 @@ export async function getTransactions(user) {
   let [current_net_worth, account_ids] = processAccounts(raw_accounts)
   let today = dayjs()
   let start = today.subtract(60, 'day')
-  if (user.lastUpdated) {
-    let last_update = dayjs(user.lastUpdated)
-    start = last_update.subtract(2, 'day') // allow for delayed transaction reporting and timezones
-  }
+  // TODO - according to the docs, new access_tokens might not have full access to transactions so 
+  // for now, we'll refetch the whole list of transactions
+  // if (user.lastUpdated) {
+  //   let last_update = dayjs(user.lastUpdated)
+  //   start = last_update.subtract(2, 'day') // allow for delayed transaction reporting and timezones
+  // }
   const transactions_response = await plaid.transactionsGet({
     access_token: user.plaidAccessToken,
     start_date: start.format('YYYY-MM-DD'),
